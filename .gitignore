@@ -1,0 +1,41 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Jupyter notebook outputs (keep source only)
+*.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment / secrets
+.env
+*.env
+
+# Trained models (large, regenerate via run_modeling.py)
+models/*.joblib
+
+# Generated plots (regenerate via run_modeling.py)
+*.png
+
+# Generated temp scripts
+run_modeling.py
