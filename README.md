@@ -28,10 +28,13 @@ student-burnout-project/
 ├── notebooks/
 │   ├── 01_EDA.ipynb                  # Exploratory Data Analysis
 │   └── 02_Modeling.ipynb             # Model Training & Evaluation
-└── models/                           # Saved models (after training)
+└── models/                           # Generated after running 02_Modeling.ipynb
     ├── dropout_model.joblib
     ├── burnout_model.joblib
-    └── feature_metadata.joblib
+    ├── feature_metadata.joblib
+    ├── scaler.joblib
+    ├── shap_importance.csv
+    └── *.png                         # Plots (ROC, SHAP, confusion matrices)
 ```
 
 ## 🚀 Quick Start
@@ -43,11 +46,11 @@ python -m venv .venv
 source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 pip install -r requirements.txt
 
-# Run notebooks in order
+# Run notebooks in order (02_Modeling generates models, metrics, and plots)
 jupyter notebook notebooks/01_EDA.ipynb
 jupyter notebook notebooks/02_Modeling.ipynb
 
-# Launch the dashboard
+# Launch the dashboard (requires models from step above)
 streamlit run app.py
 ```
 
@@ -55,12 +58,14 @@ streamlit run app.py
 
 | Model | Target | Accuracy | F1-Score |
 |-------|--------|----------|----------|
-| XGBoost | Dropout Risk | ~85% | ~0.83 |
-| XGBoost | Burnout Level | ~70% | ~0.68 |
-| Random Forest | Dropout Risk | ~82% | ~0.80 |
-| Random Forest | Burnout Level | ~68% | ~0.65 |
+| Logistic Regression | Dropout Risk | 70.0% | 0.701 |
+| Random Forest | Dropout Risk | 71.2% | 0.713 |
+| XGBoost | Dropout Risk | 66.2% | 0.661 |
+| Logistic Regression | Burnout Level | 70.0% | 0.700 |
+| Random Forest | Burnout Level | 60.0% | 0.592 |
+| XGBoost | Burnout Level | 66.9% | 0.656 |
 
-*Results may vary based on preprocessing and hyperparameter tuning.*
+*Best binary model: Random Forest (GridSearchCV) | Best multiclass model: Logistic Regression*
 
 ## 🔑 Key Insights
 

@@ -31,11 +31,11 @@ desktop.ini
 .env
 *.env
 
-# Trained models (large, regenerate via run_modeling.py)
+# Trained models (regenerate by running notebooks/02_Modeling.ipynb)
 models/*.joblib
 
-# Generated plots (regenerate via run_modeling.py)
-*.png
-
-# Generated temp scripts
-run_modeling.py
+# Generated outputs (regenerate by running notebooks/02_Modeling.ipynb)
+model_metrics.json
+models/*.png
+models/*.csv
+notebooks/*_executed.ipynb
