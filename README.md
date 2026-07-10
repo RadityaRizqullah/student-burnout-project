@@ -3,7 +3,7 @@
 An end-to-end machine learning portfolio project that explores, models, and visualizes student burnout and dropout risk factors using a multi-feature academic dataset.
 
 ![Streamlit App](https://img.shields.io/badge/Streamlit-App-blue?style=for-the-badge&logo=streamlit)
-![Python](https://img.shields.io/badge/Python-3.10+-yellow?style=for-the-badge&logo=python)
+![Python](https://img.shields.io/badge/Python-3.12+-yellow?style=for-the-badge&logo=python)
 ![XGBoost](https://img.shields.io/badge/XGBoost-Model-green?style=for-the-badge)
 
 ## 📊 Dataset
@@ -25,6 +25,7 @@ student-burnout-project/
 ├── requirements.txt                  # Python dependencies
 ├── app.py                            # Streamlit dashboard
 ├── README.md                         # This file
+├── PROJECT.md                        # Detailed project documentation
 ├── notebooks/
 │   ├── 01_EDA.ipynb                  # Exploratory Data Analysis
 │   └── 02_Modeling.ipynb             # Model Training & Evaluation
@@ -34,6 +35,7 @@ student-burnout-project/
     ├── feature_metadata.joblib
     ├── scaler.joblib
     ├── shap_importance.csv
+    ├── model_metrics.json
     └── *.png                         # Plots (ROC, SHAP, confusion matrices)
 ```
 
@@ -59,37 +61,36 @@ streamlit run app.py
 | Model | Target | Accuracy | F1-Score |
 |-------|--------|----------|----------|
 | Logistic Regression | Dropout Risk | 70.0% | 0.701 |
-| Random Forest | Dropout Risk | 71.2% | 0.713 |
+| **Random Forest** | **Dropout Risk** | **71.2%** | **0.713** |
 | XGBoost | Dropout Risk | 66.2% | 0.661 |
-| Logistic Regression | Burnout Level | 70.0% | 0.700 |
+| **Logistic Regression** | **Burnout Level** | **70.0%** | **0.700** |
 | Random Forest | Burnout Level | 60.0% | 0.592 |
 | XGBoost | Burnout Level | 66.9% | 0.656 |
 
 *Best binary model: Random Forest (GridSearchCV) | Best multiclass model: Logistic Regression*
 
-## 🔑 Key Insights
+## 🔑 Key Insights (from SHAP analysis)
 
-1. **Stress Level** and **Motivation Score** are the strongest predictors of both dropout and burnout
-2. Students with **high screen time + low sleep** face 2.5x higher dropout risk
-3. **Financial stress** compounds with low **family support** to significantly increase burnout
-4. **Attendance below 60%** is the single strongest early warning signal
-5. Students with access to **counseling** show 30% lower burnout rates
-6. **Backlogs** accumulate risk exponentially, not linearly
+1. **Motivation Score** and **Academic Engagement** are the strongest predictors of dropout risk (mean |SHAP| > 0.64)
+2. **Attendance Percent** is the single most actionable early warning signal (mean |SHAP| = 0.518)
+3. **Stress Level** and **Anxiety Score** are the top mental-health predictors (mean |SHAP| > 0.40)
+4. All 3 engineered features (academic engagement, lifestyle risk, financial burden) rank in the top 10, validating the feature engineering approach
+5. Modest model accuracy (60–71%) reflects genuinely weak signal — the strongest feature correlates only 0.24 with the target
 
 ## 🛠️ Models Used
 
-- **Logistic Regression** — baseline with L2 regularization
-- **Random Forest** — ensemble with GridSearchCV tuning
-- **XGBoost** — gradient boosting with hyperparameter optimization
-- **SHAP Analysis** — model-agnostic feature importance explanations
+- **Logistic Regression** — baseline with L2 regularization, balanced class weights
+- **Random Forest** — ensemble with GridSearchCV tuning (n_estimators, max_depth, min_samples)
+- **XGBoost** — gradient boosting with hyperparameter optimization (learning_rate, subsample, colsample)
+- **SHAP Analysis** — TreeExplainer on best XGBoost model for feature importance explanations
 
 ## 📋 Dashboard Features
 
-- **Interactive EDA**: Explore every feature distribution with filters
-- **Early Warning System**: Predict individual student risk in real-time
-- **Model Performance**: Compare algorithms with ROC curves and confusion matrices
-- **SHAP Explanations**: Understand *why* a prediction was made
-- **Risk Factors**: Department and income bracket breakdowns
+- **📊 Overview**: Dataset summary, dropout rate, burnout distribution, interactive data table
+- **🔍 EDA Explorer**: Select any feature → auto-generated distribution plots by target
+- **⚠️ Early Warning System**: Input student attributes → real-time dropout/burnout predictions
+- **🤖 Model Performance**: Side-by-side comparison, confusion matrices, SHAP feature importance
+- **💡 Insights & Recommendations**: Key findings, department breakdowns, intervention suggestions
 
 ## 📜 License
 

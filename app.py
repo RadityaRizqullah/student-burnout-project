@@ -1266,27 +1266,56 @@ elif page == "🤖 Model Performance":
             with open(metrics_path) as f:
                 all_metrics = json.load(f)
 
-            # Model comparison chart
             st.markdown('<div class="section-header">📊 Model Comparison</div>', unsafe_allow_html=True)
 
-            if isinstance(all_metrics, dict) and len(all_metrics) > 0:
-                metrics_df = pd.DataFrame(all_metrics).T.reset_index()
-                metrics_df = metrics_df.rename(columns={"index": "Model"})
+            # Build a flat DataFrame from the nested JSON
+            rows = []
+            for task_key, task_label in [("binary", "Dropout Risk"), ("multiclass", "Burnout Level")]:
+                if task_key in all_metrics and "models" in all_metrics[task_key]:
+                    for model_name, scores in all_metrics[task_key]["models"].items():
+                        row = {"Model": model_name, "Target": task_label}
+                        row.update(scores)
+                        rows.append(row)
 
-                metric_cols = [c for c in metrics_df.columns if c != "Model"]
-                fig = px.bar(
-                    metrics_df.melt(id_vars="Model", var_name="Metric", value_name="Score"),
-                    x="Model", y="Score", color="Metric",
-                    barmode="group",
-                    title="Model Performance Comparison",
-                    color_discrete_sequence=["#58a6ff", "#bc8cff", "#3fb950", "#f0883e", "#d29922"],
+            if rows:
+                metrics_df = pd.DataFrame(rows)
+                metric_cols = [c for c in metrics_df.columns if c not in ("Model", "Target")]
+
+                # ── Charts: one grouped bar per task ──
+                palette = ["#58a6ff", "#bc8cff", "#3fb950", "#f0883e"]
+                for task_label, group in metrics_df.groupby("Target"):
+                    fig = px.bar(
+                        group.melt(id_vars=["Model", "Target"], value_vars=metric_cols,
+                                   var_name="Metric", value_name="Score"),
+                        x="Model", y="Score", color="Metric",
+                        barmode="group",
+                        title=f"Model Performance — {task_label}",
+                        color_discrete_sequence=palette,
+                    )
+                    fig.update_layout(**PLOTLY_LAYOUT_DEFAULTS, height=400)
+                    fig.update_yaxes(range=[0, 1.05])
+                    st.plotly_chart(fig, use_container_width=True)
+
+                # ── Summary table ──
+                fmt = {c: "{:.4f}" for c in metric_cols}
+                st.dataframe(
+                    metrics_df.style.format(fmt).background_gradient(
+                        subset=metric_cols, cmap="RdYlGn", vmin=0, vmax=1
+                    ),
+                    use_container_width=True,
                 )
-                fig.update_layout(**PLOTLY_LAYOUT_DEFAULTS, height=450)
-                fig.update_yaxes(range=[0, 1])
-                st.plotly_chart(fig, use_container_width=True)
 
-                # Show metrics table
-                st.dataframe(metrics_df, use_container_width=True)
+                # ── Best-model callouts ──
+                best_bin = all_metrics.get("best_binary_model", "")
+                best_mc  = all_metrics.get("best_multiclass_model", "")
+                if best_bin or best_mc:
+                    cols = st.columns(2)
+                    if best_bin:
+                        cols[0].success(f"🏆 Best Dropout Risk model: **{best_bin}**")
+                    if best_mc:
+                        cols[1].success(f"🏆 Best Burnout Level model: **{best_mc}**")
+            else:
+                st.warning("model_metrics.json is empty or has unexpected structure.")
         else:
             st.info("No model_metrics.json found. Showing trained model summary...")
 
