@@ -151,10 +151,11 @@ st.markdown("""
         border: 1px solid rgba(139, 148, 158, 0.3);
     }
     
-    /* Hide Streamlit branding */
+    /* Hide Streamlit branding but keep the sidebar expand toggle (when collapsed) */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    header [data-testid="stExpandSidebarButton"] {visibility: visible;}
     
     /* Tabs styling */
     .stTabs [data-baseweb="tab-list"] {
