@@ -32,7 +32,6 @@ desktop.ini
 *.env
 
 # Trained models (regenerate by running notebooks/02_Modeling.ipynb)
-models/*.joblib
 
 # Generated outputs (regenerate by running notebooks/02_Modeling.ipynb)
 model_metrics.json
