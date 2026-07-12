@@ -34,7 +34,6 @@ desktop.ini
 # Trained models (regenerate by running notebooks/02_Modeling.ipynb)
 
 # Generated outputs (regenerate by running notebooks/02_Modeling.ipynb)
-model_metrics.json
 models/*.png
 models/*.csv
 notebooks/*_executed.ipynb

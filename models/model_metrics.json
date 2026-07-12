@@ -1,0 +1,50 @@
+{
+  "binary": {
+    "target": "Dropout_Risk",
+    "models": {
+      "Logistic Regression": {
+        "Accuracy": 0.7,
+        "F1": 0.7006,
+        "Precision": 0.7031,
+        "Recall": 0.7
+      },
+      "Random Forest (GridSearchCV)": {
+        "Accuracy": 0.7125,
+        "F1": 0.7125,
+        "Precision": 0.7125,
+        "Recall": 0.7125
+      },
+      "XGBoost (Tuned)": {
+        "Accuracy": 0.6625,
+        "F1": 0.6609,
+        "Precision": 0.6612,
+        "Recall": 0.6625
+      }
+    }
+  },
+  "multiclass": {
+    "target": "Burnout_Level",
+    "models": {
+      "Logistic Regression": {
+        "Accuracy": 0.7,
+        "F1": 0.7,
+        "Precision": 0.7001,
+        "Recall": 0.7
+      },
+      "Random Forest (GridSearchCV)": {
+        "Accuracy": 0.6,
+        "F1": 0.592,
+        "Precision": 0.5908,
+        "Recall": 0.6
+      },
+      "XGBoost (Tuned)": {
+        "Accuracy": 0.6687,
+        "F1": 0.6563,
+        "Precision": 0.6582,
+        "Recall": 0.6687
+      }
+    }
+  },
+  "best_binary_model": "Random Forest (GridSearchCV)",
+  "best_multiclass_model": "Logistic Regression"
+}
